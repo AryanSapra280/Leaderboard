@@ -12,14 +12,15 @@ public class User {
     @Id
     private Long id;
 
-    @NotNull(message = "Name can not be null")
-    @NotEmpty(message = "Name can not be empty")
     private String userName;
 
     @Min(value = 0, message = "value should be between 1 and 100")
     @Max(value = 100, message = "value should be between 1 and 100")
     private Integer score;
     private Set<String>badges;
+
+    public User() {
+    }
 
     public User(Long id, String userName, Integer score, Set<String> badges) {
         this.id = id;

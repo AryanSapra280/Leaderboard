@@ -29,12 +29,9 @@ public class UserService implements IUserService{
     @Override
     public User updateUser(User user) throws UserNotFound, BadRequestException{
         User dbUser = getUserById(user.getId());
-        User tempUser = new User(user.getId(),user.getUserName(), user.getScore(), user.getBadges());
-        tempUser.setScore(dbUser.getScore());
-        if(!(tempUser.equals(dbUser)) || user.getScore() == 0) {
+        if(user.getScore() == 0) {
             throw new BadRequestException();
         }
-
         String badge = Badges.getBadge(user.getScore());
         Set<String>badges = dbUser.getBadges();
         badges.add(badge);
@@ -55,7 +52,7 @@ public class UserService implements IUserService{
     public User getUserById(Long id) throws UserNotFound{
         Optional<User>optionalUser = userRepository.findById(id);
         if(optionalUser.isEmpty()) {
-            throw new UserNotFound(String.format("No User found with id %d",id));
+            throw new UserNotFound();
         }
         return optionalUser.get();
     }

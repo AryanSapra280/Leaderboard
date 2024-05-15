@@ -44,7 +44,10 @@ public class UserControllers {
     @PostMapping("/")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult result) {
         if(result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.toString());
+        }
+        if(user.getUserName() == null || user.getUserName().equals("")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userName can't be null or empty");
         }
         if(userService.existById(user.getId())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exist with this id");
@@ -67,8 +70,7 @@ public class UserControllers {
         }catch (UserNotFound userNotFound) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }catch (BadRequestException badRequestException) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Score is less than equal to zero or multiple values" +
-                    " are being tried to update");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Score can't be less than equal to zero");
         }
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
